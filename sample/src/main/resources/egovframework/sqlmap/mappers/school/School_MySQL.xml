@@ -19,4 +19,14 @@
 		from tb_school_info
 		where school_id = #{schoolIdx}
 	</select>
+	<insert id="insertSchoolInfo" parameterType="java.util.HashMap">
+		INSERT INTO tb_school_info(
+					school_name,
+					school_area,
+					school_addr,
+					school_phone)
+		VALUES(
+				#{schoolName},#{schoolArea},#{schoolAddr},#{schoolPhone})
+	</insert>
+	
 </mapper>

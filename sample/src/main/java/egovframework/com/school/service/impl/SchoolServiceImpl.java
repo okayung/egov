@@ -2,7 +2,7 @@ package egovframework.com.school.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -32,6 +32,17 @@ public class SchoolServiceImpl extends EgovAbstractServiceImpl implements School
 		HashMap<String, Object> schoolInfo = schoolDAO.selectSchoolInfo(schoolIdx);
 		return schoolInfo;
 	}
+
+	@Override
+	public int insertSchoolInfo(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		int resultChk =0;
+		resultChk =schoolDAO.insertSchoolInfo(paramMap);
+		
+		return resultChk;
+	}
+	
+	
 	
 	
 }

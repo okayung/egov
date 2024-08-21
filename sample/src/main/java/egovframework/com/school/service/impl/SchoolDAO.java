@@ -17,4 +17,12 @@ public class SchoolDAO extends EgovAbstractMapper{
 		return selectOne("selectSchoolInfo", schoolIdx);
 	}
 
+
+	public int insertSchoolInfo(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return insert("insertSchoolInfo", paramMap);
+	}
+	
 }
+
+
