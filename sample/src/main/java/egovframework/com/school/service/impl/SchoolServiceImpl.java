@@ -42,7 +42,13 @@ public class SchoolServiceImpl extends EgovAbstractServiceImpl implements School
 		return resultChk;
 	}
 	
-	
+
+	@Override
+	public int deleteSchoolInfo(int schoolIdx) {
+		// TODO Auto-generated method stub
+		int schoolInfo = schoolDAO.deleteSchoolInfo(schoolIdx);
+		return schoolInfo;
+	}
 	
 	
 }

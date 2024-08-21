@@ -64,5 +64,17 @@ public class SchoolController {
 		return mv;
 		
 	}
+	@RequestMapping("school/deleteSchoolInfo.do")
+	public ModelAndView deleteSchoolInfo(@RequestParam HashMap<String, Object> paramMap) {
+		ModelAndView mv = new ModelAndView();
+		
+		int schoolIdx = Integer.parseInt(paramMap.get("schoolId").toString());
+		int schoolInfo = schoolService.deleteSchoolInfo(schoolIdx);
+
+		mv.addObject("schoolInfo", schoolInfo);		
+		mv.setViewName("jsonView");
+		return mv;
+		
+	}
 
 }

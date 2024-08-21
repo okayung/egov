@@ -12,9 +12,12 @@
   crossorigin="anonymous"></script>
   
   <script type="text/javascript">
-  $( document ).ready(function() {
-	  $("#btn_insert").on('click', function(){
-		  fn_insertSchool();
+  $( document ).ready(function() { //테그들이 만들어졌을때 화면을 준비되면(셋팅) ready
+	  $("#btn_insert").on('click', function(){ //insert 버튼실행(on) 클릭이벤트
+		  fn_insertSchool(); // 버튼이 실행되었을때 insertSchool이 실행됨
+	});
+	  $("#btn_delete").on('click', function(){ 
+		  fn_deleteSchool();
 	  })
 	});
   
@@ -35,6 +38,31 @@
   					alert("저장되었습니다.");	
   				}
   				
+  			},  				
+  			error: function(jqXHR, textStatus, errorThrown){
+  				console.log("error");
+  			},
+  			complete : function(jqXHR, textStatus){
+  				console.log("complete");
+  			}
+  		});
+  	}
+  	
+  	function fn_deleteSchool(){
+  		var frm = $("#frm").serialize();
+
+  		$.ajax({
+  			type : 'POST',
+  			url : '/school/deleteSchoolInfo.do',
+  			data : {'schoolId': 6},
+  			dataType : 'json',
+  			beforeSend: function(jqXHR, settings){
+  				console.log("beforeSend");
+  			},
+  			success : function(data, textStatus, jqXHR){
+  				if(data.schoolInfo > 0){
+  					alert("삭제되었습니다.");	
+  				}
   			},  				
   			error: function(jqXHR, textStatus, errorThrown){
   				console.log("error");
@@ -70,6 +98,7 @@
 		</table>
 	</form>
 	<input type="button" id="btn_insert" name="btn_insert" value="저장"/>
+	<input type="button" id="btn_delete" name="btn_delete" value="삭제"/>
 	
 </body>
 </html>

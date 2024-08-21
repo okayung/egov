@@ -19,6 +19,7 @@
 		from tb_school_info
 		where school_id = #{schoolIdx}
 	</select>
+
 	<insert id="insertSchoolInfo" parameterType="java.util.HashMap">
 		INSERT INTO tb_school_info(
 					school_name,
@@ -28,5 +29,10 @@
 		VALUES(
 				#{schoolName},#{schoolArea},#{schoolAddr},#{schoolPhone})
 	</insert>
+	<delete id="deleteSchoolInfo" parameterType="java.util.HashMap">
+		delete from tb_school_info
+		where school_id = #{schoolIdx}
+	</delete>
+	
 	
 </mapper>
