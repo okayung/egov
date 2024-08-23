@@ -29,8 +29,8 @@ public class SchoolController {
 	}
 //	@RequestMapping("school/getSchoolInfo.do")
 //	public ModelAndView getSchoolInfo(@RequestParam(name="schoolIdx") int schoolIdx) {
-//		ModelAndView mv = new ModelAndView("school/schoolInfo");
-//		
+//		ModelAndView mv = new ModelAndView("school/schoolInfo"); //jsp 경로 또는
+//		mv.setViewName("school/schoolInfo); //->이런 형태가 능
 //		HashMap<String, Object> schoolInfo = schoolService.selectSchoolInfo(schoolIdx);
 //		mv.addObject("schoolInfo", schoolInfo);
 //		
@@ -47,7 +47,7 @@ public class SchoolController {
 		HashMap<String, Object> schoolInfo = schoolService.selectSchoolInfo(schoolIdx);
 		mv.addObject("schoolInfo", schoolInfo);
 		
-		mv.setViewName("jsonView");
+		mv.setViewName("jsonView"); //json 형태로 addObject 넘겨주기
 		return mv;
 		
 	}

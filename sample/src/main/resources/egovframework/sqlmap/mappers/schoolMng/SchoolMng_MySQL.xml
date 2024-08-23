@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SchoolMngDAO">
+
+	<select id="selectSchoolMngList" resultType="java.util.HashMap">
+		SELECT  school_id AS schoolId,
+				school_name AS schoolName,
+		        school_area AS schoolArea,
+		        school_addr AS schoolAddr,
+		        school_phone AS schoolPhone
+		FROM tb_school_info
+	</select>
+	
+	<select id="selectSchoolMngInfo" parameterType="int" resultType="java.util.HashMap">
+		SELECT  school_id AS schoolId,
+				school_name AS schoolName,
+		        school_area AS schoolArea,
+		        school_addr AS schoolAddr,
+		        school_phone AS schoolPhone
+		FROM tb_school_info
+		WHERE school_id = #{schoolIdx}
+	</select>
+	
+	<insert id="insertSchoolMngInfo" parameterType="java.util.HashMap">
+		INSERT INTO tb_school_info(
+			school_name,
+		    school_area,
+		    school_addr,
+		    school_phone
+		) VALUES (
+			#{schoolName},
+		    #{schoolArea},
+		    #{schoolAddr},
+		    #{schoolPhone}
+		)
+	</insert>
+	
+	<delete id="deleteSchoolMngInfo" parameterType="java.util.HashMap">
+		DELETE FROM tb_school_info
+		WHERE school_id = #{schoolId}
+	</delete>
+	
+	<!-- update 방법 1 -->
+	<update id="updateSchoolMngInfo" parameterType="java.util.HashMap"> 
+		update tb_school_info
+		<set>
+			<if test="schoolName != '' and schoolName != null and schoolName != 'undefined'">
+				school_name = #{schoolName},
+			</if>
+			<if test="schoolArea != '' and schoolArea != null and schoolArea != 'undefined'">
+				school_area = #{schoolArea},
+			</if>
+			<if test="schoolAddr != '' and schoolAddr != null and schoolAddr != 'undefined'">
+				school_addr = #{schoolAddr},
+			</if>
+			<if test="schoolPhone != '' and schoolPhone != null and schoolPhone != 'undefined'">
+				school_phone = #{schoolPhone},
+			</if>	
+		</set>
+		where  school_id = #{schoolId};
+	</update>
+	
+	<!-- update 방법 2
+	<update>
+		update tb_school_info
+		set school_name = #{schoolName},
+			school_area = #{schoolArea},
+			school_addr = #{schoolAddr},
+			school_phone = #{schoolPhone}
+		where school_id = #{schoolId}
+	</update>
+	 -->
+
+</mapper>
