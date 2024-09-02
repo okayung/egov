@@ -9,11 +9,38 @@
 <link rel="stylesheet" href="/css/egovframework/login.css"/>
 <title>Insert title here</title>
 <script type="text/javascript">
+	$(document).ready(function(){
+		$("#btn_login").on('click', function(){
+			fn_login();
+		});
+	});
+
 	function fn_createAccount() {
 		var frm= $("#frm");
+		frm.attr("method","POST")
 		frm.attr("action","/join.do");
 		frm.submit();
 	}
+	function fn_login() {
+		var frm = $("#frm").serialize();
+		$.ajax({
+			url:'/member/loginAction.do',
+			method:'post',
+			data :frm,
+			dataType :'json',
+			success : function (data, status, xhr){
+				if(data.resultChk){
+					location.href = "/main.do";
+				}else{
+					alert("로그인에 실패했습니다");
+					return;
+				}
+			},
+			error:function (data, status, err){			
+			}
+		});	
+	}
+	
 </script>
 </head>
 <body>
@@ -23,16 +50,16 @@
 	        <td><h2>로그인</h2></td>
 	    </tr>
 	    <tr>
-	        <td><input type="text" placeholder="ID"></td>
+	        <td><input id="id" name="id" type="text" placeholder="ID"></td>
 	    </tr>
 	    <tr>
-	        <td><input type="password" placeholder=Password></td>
+	        <td><input id="pwd" name="pwd" type="password" placeholder=Password></td>
 	    </tr>
 	    <tr>
 	       <td><input type="checkbox"> 로그인 정보 저장</td>
 	    </tr>
 	   <tr>
-	        <td><input type="submit" value="Sign in" class="btn" onclick="alert('로그인 성공!')"></td>
+	        <td><input type="button" value="Sign in" class="btn" id="btn_login" name="btn_login"></td>
 	    </tr>
 	    <tr>
 	        <td class="join"><a href="javascript:fn_createAccount();">회원가입</a></td>

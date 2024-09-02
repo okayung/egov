@@ -4,8 +4,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,14 +23,28 @@ public class MainController {
 	SHA256 sha256 = new SHA256();
 	
 	@RequestMapping("/main.do")
-	public String main() {
-		return "main/main";
+	public String main(HttpSession session, Model model) {
+		HashMap<String, Object> loginInfo = null;
+		loginInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
+		if(loginInfo != null) {
+			model.addAttribute("loginInfo", loginInfo);
+			return "main/main";
+		}else {
+			return "redirect:/login.do"; // redirect-> login.do로 다시 요청하기
+		}
+		
 	}
 	
 	@RequestMapping("/login.do")
 	public String login() {
 		return "login";
 	}
+	@RequestMapping("/logout.do") //logout
+	public String logout(HttpSession session) { 
+		session.setAttribute("loginInfo", null);
+		return "redirect:/";
+	}
+	
 	
 	@RequestMapping("/join.do")
 	public String join() {
@@ -64,6 +80,33 @@ public class MainController {
 		int reseulChk =0;
 		reseulChk= mainService.insertMember(paramMap);
 		mv.addObject("reseulChk", reseulChk);
+		mv.setViewName("jsonView");
+		return mv;
+		
+	}
+	@RequestMapping("/member/loginAction.do")
+	public  ModelAndView loginAction(HttpSession session, @RequestParam HashMap<String, Object> paramMap) {
+		ModelAndView mv =  new ModelAndView();
+		// 입력받은 패스워드
+		String pwd = paramMap.get("pwd").toString();
+		// 암호화된 패스워드
+		String encryptPwd = null;
+		try {
+			encryptPwd = sha256.encrypt(pwd).toString();
+			paramMap.replace("pwd", encryptPwd);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		HashMap<String, Object> loginInfo = null;
+		loginInfo = mainService.selectLoginInfo(paramMap);
+		if(loginInfo != null) {
+			session.setAttribute("loginInfo", loginInfo); // 로그인 정보를 session에 넣어주기
+			mv.addObject("resultChk", true);
+		}else {
+			mv.addObject("resultChk", false);
+		}
+
 		mv.setViewName("jsonView");
 		return mv;
 		
