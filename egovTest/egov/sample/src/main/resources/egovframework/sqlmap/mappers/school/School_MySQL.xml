@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SchoolDAO">
+
+	<select id="selectSchoolList" resultType="java.util.HashMap">
+		select school_id as schoolId,
+		       school_name as schoolName,
+	   		   school_area as schoolArea,
+	           school_addr as schoolAddr,
+ 	           school_phone as schoolPhone
+		from tb_school_info
+	</select>
+	<select id="selectSchoolInfo" parameterType="int" resultType="java.util.HashMap">
+		select school_id as schoolId,
+		       school_name as schoolName,
+	   		   school_area as schoolArea,
+	           school_addr as schoolAddr,
+ 	           school_phone as schoolPhone
+		from tb_school_info
+		where school_id = #{schoolIdx}
+	</select>
+
+	<insert id="insertSchoolInfo" parameterType="java.util.HashMap">
+		INSERT INTO tb_school_info(
+					school_name,
+					school_area,
+					school_addr,
+					school_phone)
+		VALUES(
+				#{schoolName},#{schoolArea},#{schoolAddr},#{schoolPhone})
+	</insert>
+	<delete id="deleteSchoolInfo" parameterType="java.util.HashMap">
+		delete from tb_school_info
+		where school_id = #{schoolIdx}
+	</delete>
+	
+	
+</mapper>
