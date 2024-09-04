@@ -10,19 +10,27 @@
 		$("#btn_logout").on('click', function() {
 			fn_logout();
 		});
+		
+		$("#btn_mypage").on('click', function() { //session에서 값을 가져오기때문에 메소드를 따로 지정하지 않음
+			var frm = $("#logoutFrm");
+			frm.attr("method", "POST");
+			frm.attr("action", "/mypage.do")
+			frm.submit();
+		});
 	});
+	
 	function fn_logout() {
 		var frm = $("#logoutFrm");
 		frm.attr("method", "POST");
 		frm.attr("action", "/logout.do")
 		frm.submit();
-
 	}
 </script>
 </head>
 <header>
 	<form id="logoutFrm" name="logoutFrm"></form>
 	<label>${loginInfo.id }님 환영합니다</label>
+	 <input type="button" id="btn_mypage" name="btn_mypage" value="마이페이지" /> 
 	 <input type="button" id="btn_logout" name="btn_logout" value="로그아웃" /> 
 	 header
 </header>

@@ -110,55 +110,62 @@
 				<td>아이디</td>
 			</tr>
 			<tr>
-				<td><input type="text" class="text" id="accountId"
-					style="width: 180px;" name="accountId"> <input
-					type="button" id="btn_idChk" name="btn_idChk" value="중복검사">
+				<td>
+					<input type="text" class="text" id="accountId" style="width: 180px;" name="accountId"/>
+					<input	type="button" id="btn_idChk" name="btn_idChk" value="중복검사"/>
 				</td>
 			</tr>
 			<tr>
 				<td>비밀번호</td>
 			</tr>
 			<tr>
-				<td><input type="password" class="text" id="accountPwd"
-					name="accountPwd"></td>
+				<td>
+					<input type="password" class="text" id="accountPwd"	name="accountPwd">
+				</td>
 			</tr>
 			<tr>
 				<td>비밀번호 확인</td>
 			</tr>
 			<tr>
-				<td><input type="password" class="text" id="accountPwdConfirm"
-					name="accountPwdConfirm"></td>
+				<td>
+					<input type="password" class="text" id="accountPwdConfirm" name="accountPwdConfirm"/>
+				</td>
 			</tr>
 			<tr>
 				<td>이름</td>
 			</tr>
 			<tr>
-				<td><input type="text" class="text" id="accountName"
-					name="accountName"></td>
+				<td>
+					<input type="text" class="text" id="accountName" name="accountName"/>
+				</td>
 			</tr>
 			<tr>
 				<td>생년월일</td>
 			</tr>
 			<tr>
-				<td><input type="date" class="text" id="accountBirth"
-					name="accountBirth"></td>
+				<td>
+					<input type="date" class="text" id="accountBirth" name="accountBirth"/>
+				</td>
 			</tr>
 			<tr>
 				<td>이메일</td>
 			</tr>
 			<tr>
-				<td><input type="text" class="email" id="email" name="email">
-					@ <select id="emailAddr" name="emailAddr">
-						<option value="">--주소를선택하세요--</option>
-						<option value="naver.com">naver.com</option>
-						<option value="gmail.com">gmail.com</option>
-						<option value="daum.net">daum.net</option>
-						<option value="nate.com">nate.com</option>
-				</select></td>
+				<td>
+					<input type="text" class="email" id="email" name="email"> @ 
+						<select id="emailAddr" name="emailAddr">
+							<option value="">--주소를선택하세요--</option>
+							<option value="naver.com">naver.com</option>
+							<option value="gmail.com">gmail.com</option>
+							<option value="daum.net">daum.net</option>
+							<option value="nate.com">nate.com</option>
+						</select>
+				</td>
 			</tr>
 			<tr>
-				<td><input type="button" value="가입하기" class="btn"
-					onclick="fn_join();"></td>
+				<td>
+					<input type="button" value="가입하기" class="btn"	onclick="fn_join();"/>
+				</td>
 			</tr>
 		</table>
 	</form>
