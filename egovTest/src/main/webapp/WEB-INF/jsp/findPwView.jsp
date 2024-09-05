@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,60 +13,61 @@
 			fn_certification();
 		});
 	});
-	function fn_certification() { // 인증
+	
+	function fn_certification(){
 
 		var frm = $("#frm").serialize();
 		$.ajax({
-			url:'/certification.do',
-			method:'post',
-			data :frm,
-			dataType :'json',
-			success : function (data, status, xhr){
-				if(data.memberIdx >0){
-					alert("인증되었습니다");
-					$("#memberIdx").val(data.memberIdx);
-					var frm = $("#frm"); //submit으로 넘기는 방식, 화면전환만하기위해
-					frm.attr("method","POST")
-					frm.attr("action","/settingPwd.do"); //패스워드 재설정 화면
-					frm.submit();
-				}else {
-					alert("인증에 실패하였습니다");
-					return;
-				}
-			},
-			error:function (data, status, err){	
-				console.log(err);
-			}
-		});	
+		    url: '/certification.do',
+		    method: 'post',
+		    data : frm,
+		    dataType : 'json',
+		    success: function (data, status, xhr) {
+		        if(data.memberIdx > 0){
+		        	alert("인증되었습니다.");
+		        	$("#memberIdx").val(data.memberIdx); // 폼테그가 안으로
+		     		var frm = $("#frm");  //순서가 중요 
+		     		frm.attr("method", "POST");
+		     		frm.attr("action", "/settingPwd.do");
+		     		frm.submit();
+		        }else{
+		        	alert("인증에 실패하였습니다.");
+		        	return;
+		        }
+		    },
+		    error: function (data, status, err) {
+		    	console.log(err);
+		    }
+		});
 	}
-	
+
 </script>
 </head>
 <body>
 <form id="frm" name="frm">
-	<input type="hidden" id="memberIdx" name="memberIdx"  value=""/>
+	<input type="hidden" id="memberIdx" name="memberIdx" value=""/>
 	<table>
 	    <tr>
-	        <td><h2>비밀번호찾기</h2></td>
+	        <td><h2>비밀번호 찾기</h2></td>
 	    </tr>
 	    <tr>
-	        <td><input id="memberId" name="memberId" type="text" placeholder="ID를 입력하세요"></td>
+	        <td><input type="text" placeholder="ID를 입력해주세요" id="memberId" name="memberId"></td>
 	    </tr>
 	    <tr>
-	        <td><input id="memberName" name="memberName" type="text" placeholder="이름을읿력해주세요"></td>
+	        <td><input type="text" placeholder="이름을 입력해주세요" id="memberName" name="memberName"></td>
 	    </tr>
 	    <tr>
-	        <td><input id="memberEmail" name="memberEmail" type="text" placeholder="이메일을입력해주세요"></td>
+	        <td><input type="text" placeholder="이메일을 입력해주세요" id="memberEmail" name="memberEmail"></td>
 	    </tr>
-	   	<tr>
-	        <td><input type="button" value="본인인증" class="btn" id="btn_certification" name="btn_certification"></td>
+	   <tr>
+	        <td><input type="button" value="본인 인증" class="btn" id="btn_certification" name="btn_certification"></td>
 	    </tr>
 	    <tr>
 	        <td class="join">
 	        	<a href="/login.do">로그인화면으로</a>
 	        </td>
 	    </tr>
-</table>
+	</table>
 </form>
 </body>
 </html>

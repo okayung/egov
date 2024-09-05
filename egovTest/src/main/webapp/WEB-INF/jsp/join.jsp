@@ -10,96 +10,94 @@
 <link rel="stylesheet" href="/css/egovframework/join.css" />
 <title>회원가입</title>
 <script type="text/javascript">
-	
 	$(document).ready(function(){
 		$("#btn_idChk").on('click', function(){
 			fn_idChk();
 		});
 	});
-	function fn_join() {
-		var accountId = $("#accountId").val(); //아이디입력
-		var pwd = $("#accountPwd").val(); //비빌번호입력
-		var pwdConfirm = $("#accountPwdConfirm").val(); //비빌번호 재확인
-		var name = $("#accountName").val(); //이름 입력
-		var birth = $("#accountBirth").val(); // 생년월일 입력
+	function fn_join(){
+		var accountId = $("#accountId").val();
+		var pwd = $("#accountPwd").val();
+		var pwdConfirm = $("#accountPwdConfirm").val();
+		var name = $("#accountName").val();
+		var birth = $("#accountBirth").val();
 		var email = $("#email").val();
 		var emailAddr = $("#emailAddr").val();
 		var idChkYn = $("#idChkYn").val();
-		
-		if(accountId === ""){
-			alert("ID를 입력하세요");
+		if(accountId == ""){
+			alert("ID를 입력하세요.");
 			return;
-		}else if(idChkYn ==="N"){
-			alert("ID를  중복검사를 해주세요");
+		}else if(idChkYn == 'N'){
+			alert("아이디 중복검사를 해주시기 바랍니다.");
 			return;
-		}else if(pwd != pwdConfirm) {
-			alert("비빌번호를 확인해주세요");
+		}else if(pwd != pwdConfirm){
+			alert("비밀번호를 확인해주세요.");
 			return;
-		}else if(name === "") {
+		}else if(name === ""){
 			alert("이름을 입력하세요");
 			return;
-		}else if(birth === "") {
+		}else if(birth === ""){
 			alert("생년월일을 입력하세요");
 			return;
-		}else if(email === "" || emailAddr ==="") { // -> || = or 연산자
-			alert("이메일을 입력해주세요");
+		}else if(email === "" || emailAddr === ""){
+			alert("이메일을 입력하세요.");
 			return;
-		}else{ //회원가입이 되는 부분
+		}else{
+			// 회원가입이 되는 부분
 			var frm = $("#frm").serialize();
 			$.ajax({
-				url:'/member/insertMember.do',
-				method:'post',
-				data :frm,
-				dataType :'json',
-				success : function (data, status, xhr){
-					if(data.reseulChk > 0){
-						alert("회원가입이 완료되었습니다");
-						location.href = "/login.do";
-
-					}else{
-						alert("회원가입에 실패했습니다");
-						return;
-					}
-				},
-				error : function (data, status, err){
-					console.log(data);	
-				}
-			});		
+			    url: '/member/insertMember.do',
+			    method: 'post',
+			    data : frm,
+			    dataType : 'json',
+			    success: function (data, status, xhr) {
+			        if(data.resultChk > 0){
+			        	alert("회원이 되신걸 축하드립니다.");
+			        	location.href="/login.do";
+			        }else{
+			        	alert("회원가입에 실패하였습니다.");
+			        	return;
+			        }
+			    },
+			    error: function (data, status, err) {
+			    }
+			});
+			
 		}
 	}
+	
 	function fn_idChk(){
 		var accountId = $("#accountId").val();
-		if(accountId===""){
-			alert("중복 검사할 아이디를 입력하세요")
+		if(accountId ===""){
+			alert("중복 검사할 아이디를 입력해주세요.");
 		}else{
 			$.ajax({
-				url:'/member/idChk.do',
-				method:'post',
-				data :{
-					'accountId' : accountId
-				},
-				dataType :'json',
-				success : function (data, status, xhr){
-					if(data.idChk > 0){
-						alert("이미 등록된 아이디입니다");
-						return;
-					}else{
-						$("#idChkYn").val('Y');
-						alert("사용하실 수 있는 아이디입니다");
-					}
-				},
-				error:function (data, status, err){			
-				}
-			});	
-		}	
-
+			    url: '/member/idChk.do',
+			    method: 'post',
+			    data : {
+			    	'accountId' : accountId
+			    },
+			    dataType : 'json',
+			    success: function (data, status, xhr) {
+			        if(data.idChk > 0){
+			        	alert("이미 등록된 아이디입니다.");
+			        	return;
+			        }else{
+			        	alert("사용하실 수 있는 아이디입니다.");
+			        	$("#idChkYn").val('Y');
+			        }
+			    },
+			    error: function (data, status, err) {
+			    }
+			});
+		}
 	}
-	
 </script>
+
 </head>
 <body>
 	<form id="frm" name="frm">
-		<input type="hidden" id="idChkYn" name="idChkYn" value="N"/ >
+		<input type="hidden" id="idChkYn" name="idChkYn" value="N"/>
 		<table>
 			<tr>
 				<td>
@@ -111,8 +109,8 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="text" class="text" id="accountId" style="width: 180px;" name="accountId"/>
-					<input	type="button" id="btn_idChk" name="btn_idChk" value="중복검사"/>
+					<input type="text" class="text" style="width:180px;" id="accountId" name="accountId"/>
+					<input type="button" id="btn_idChk" name="btn_idChk" value="중복검사"/>
 				</td>
 			</tr>
 			<tr>
@@ -120,7 +118,7 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="password" class="text" id="accountPwd"	name="accountPwd">
+					<input type="password" class="text" id="accountPwd"	name="accountPwd"/>
 				</td>
 			</tr>
 			<tr>
@@ -153,18 +151,19 @@
 			<tr>
 				<td>
 					<input type="text" class="email" id="email" name="email"> @ 
-						<select id="emailAddr" name="emailAddr">
-							<option value="">--주소를선택하세요--</option>
-							<option value="naver.com">naver.com</option>
-							<option value="gmail.com">gmail.com</option>
-							<option value="daum.net">daum.net</option>
-							<option value="nate.com">nate.com</option>
-						</select>
+					<select id="emailAddr" name="emailAddr">
+						<option value="">--주소를 선택해주세요--</option>
+						<option value="naver.com">naver.com</option>
+						<option value="gmail.com">gmail.com</option>
+						<option value="daum.net">daum.net</option>
+						<option value="nate.com">nate.com</option>
+					</select>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="button" value="가입하기" class="btn"	onclick="fn_join();"/>
+					<input type="button" value="가입하기" class="btn"
+					onclick="fn_join();">
 				</td>
 			</tr>
 		</table>

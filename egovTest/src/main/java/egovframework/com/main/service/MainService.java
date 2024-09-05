@@ -17,9 +17,9 @@ public interface MainService {
 	
 	public int deleteMemberInfo(int memberIdx);
 	
-	public List<String> selectFindId(HashMap<String, Object> prarmMap);
+	public List<String> selectFindId(HashMap<String, Object> paramMap);
 	
-	public int selectMemberCertification(HashMap<String, Object> prarmMap);
+	public int selectMemberCertification(HashMap<String, Object> paramMap);
 	
-	public int updatePwd(HashMap<String, Object> prarmMap);
+	public int updatePwd(HashMap<String, Object> paramMap);
 }

@@ -7,7 +7,7 @@ public class SHA256 {
 	 // 입력 문자열을 SHA-256으로 암호화하여 해시 값을 반환하는 메서드
     public String encrypt(String text) throws NoSuchAlgorithmException {
 	    // SHA-256 알고리즘의 인스턴스 생성
-        MessageDigest md = MessageDigest.getInstance("SHA-256");       
+        MessageDigest md = MessageDigest.getInstance("SHA-256");         
         // 입력 문자열의 바이트 배열을 업데이트하여 해시 값을 계산
         md.update(text.getBytes()); 
 		// 계산된 해시 값을 16진수 문자열로 변환하여 반환
