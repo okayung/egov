@@ -24,7 +24,7 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#btn_save").on('click', function(){
-
+			fn_save();
 		});
 		
 		$("#btn_list").on('click', function(){
@@ -58,7 +58,7 @@
 <body>
 	<div>
 		<form id="saveFrm" name="saveFrm">
-			<input type="hidden" id="statusFlag" name="statusFlag" value="${flag}"/>
+			<input type="hidden" id="statusFlag" name="statusFlag" value="${flag}"/> <!-- 무슨버튼을 누렸는지(등록 or 수정) -->
 			<table>
 				<tr>
 					<th>제목</th>
@@ -79,5 +79,6 @@
 		<input type="button" id="btn_save" name="btn_save" value="등록"/>
 		<input type="button" id="btn_list" name="btn_list" value="목록"/>
 	</div>
+
 </body>
 </html>

@@ -29,10 +29,17 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 	}
 
 	@Override
-	public int saveBoard(HashMap<String, Object> paramMap) {
+	public int saveBoard(HashMap<String, Object> paramMap) { 
 		// TODO Auto-generated method stub
 		int resultChk = 0;
 		
+		String flag = paramMap.get("statusFlag").toString();
+		
+		if("I".equals(flag)) { // I가 들어오면 insert
+			resultChk = boardDAO.insertBoard(paramMap);
+		}else if("U".equals(flag)) { // U가 들어오면 update
+			resultChk = boardDAO.updateBoard(paramMap);
+		}
 		
 		return resultChk;
 	}

@@ -44,7 +44,11 @@
 	}
 	
 	function fn_insert(){
-		
+		$("#flag").val("I");
+		var frm = $("#boardFrm");
+		frm.attr("method", "POST"); //메소드속성호출(post방식으로)
+		frm.attr("action", "/board/registBoard.do"); // 액션속성호출(호출된 url로 이동)
+		frm.submit();  //-> 단순페이지 이동할때는 submit을 활용
 	}
 	
 	function fn_paging_move(pageIndex){
@@ -93,6 +97,7 @@
 </script>
 </head>
 <body>
+
 	<div id="search">
 		<form id="boardFrm" name="boardFrm" method="POST">
 			<input type="hidden" id="boardIdx" name="boardIdx" value=""/>
@@ -146,5 +151,6 @@
 	</div>
 	<div id="paging" >
 	</div>
+
 </body>
 </html> 
