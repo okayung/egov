@@ -17,71 +17,91 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
 public class BoardController {
-	
-	@Resource(name="BoardService")
-	private BoardService boardService;
-	
-	@RequestMapping("/board/boardList.do") // 게시판목록
-	public String boardList(HttpSession session, Model model) {
-		HashMap<String, Object> loginInfo = null;
-		loginInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
-		if(loginInfo != null) {
-			model.addAttribute("loginInfo", loginInfo);
-			return "board/boardList";
-		}else {
-			return "redirect:/login.do";
-		}
-	}
-	
-	@RequestMapping("/board/selectBoardList.do")
-	public ModelAndView selectBoardList(@RequestParam HashMap<String, Object> paramMap) {
-		ModelAndView mv = new ModelAndView();
-		
-		
-		mv.setViewName("jsonView");
-		return mv;
-	}
-	
-	@RequestMapping("/board/boardDetail.do")
-	public String boardDetail(@RequestParam(name="boardIdx") int boardIdx, Model model, HttpSession session) {
-		HashMap<String, Object> loginInfo = null;
-		loginInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
-		if(loginInfo != null) {
-			model.addAttribute("boardIdx", boardIdx);
-			return "board/boardDetail";
-		}else {
-			return "redirect:/login.do";
-		}
-		
-		
-	}
-	
-	@RequestMapping("/board/registBoard.do") //등록하거나 수정 
-	public String registBoard(HttpSession session, Model model, @RequestParam(name="flag") String flag) {
-		HashMap<String, Object> loginInfo = null;
-		loginInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
-		if(loginInfo != null) {
-			model.addAttribute("flag", flag); //등록 또는 수정을 할지 구분할때 
-			return "board/registBoard";
-		}else {
-			return "redirect:/login.do";
-		}
-		
-	}
-	
-	@RequestMapping("/board/saveBoard.do")
-	public ModelAndView saveBoard(@RequestParam HashMap<String, Object> paramMap, HttpSession session) { //로그인정보를 넣기 위해 session 
-		ModelAndView mv = new ModelAndView();
-		int resultChk = 0;
+   
+   @Resource(name="BoardService")
+   private BoardService boardService;
+   
+   @RequestMapping("/board/boardList.do")
+   public String boardList(HttpSession session, Model model) {
+      HashMap<String, Object> loginInfo = null;
+      loginInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
+      if(loginInfo != null) {
+         model.addAttribute("loginInfo", loginInfo);
+         return "board/boardList";
+      }else {
+         return "redirect:/login.do";
+      }
+   }
+   
+   @RequestMapping("/board/selectBoardList.do")
+   public ModelAndView selectBoardList(@RequestParam HashMap<String, Object> paramMap) {
+      ModelAndView mv = new ModelAndView();
+      
+      PaginationInfo paginationInfo = new PaginationInfo();
+      paginationInfo.setCurrentPageNo(Integer.parseInt(paramMap.get("pageIndex").toString()));
+      paginationInfo.setRecordCountPerPage(10); 
+      paginationInfo.setPageSize(10); //페이지 수 
+      
+      paramMap.put("firstIndex", paginationInfo.getFirstRecordIndex());
+      paramMap.put("lastIndex", paginationInfo.getLastRecordIndex());
+      paramMap.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+      
+      List <HashMap<String, Object>> list = boardService.selectBoardList(paramMap);
+      int totCnt = boardService.selectBoardListCnt(paramMap);
+      paginationInfo.setTotalRecordCount(totCnt);
+      
+      mv.addObject("list",list);
+      mv.addObject("totCnt",totCnt);
+      mv.addObject("paginationInfo", paginationInfo);
+      
+      mv.setViewName("jsonView");
+      return mv;
+   }
+   
+   @RequestMapping("/board/boardDetail.do")
+   public String boardDetail(@RequestParam(name="boardIdx") int boardIdx, Model model, HttpSession session) {
+      HashMap<String, Object> loginInfo = null;
+      loginInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
+      if(loginInfo != null) {
+    	  
+    	 HashMap<String, Object> boardInfo = boardService.selectBoardDetail(boardIdx);
+         model.addAttribute("boardIdx", boardIdx); //수정 삭제를 위해 같이 넘겨주기
+    	 model.addAttribute("boardInfo", boardInfo); 
+         return "board/boardDetail";
+      }else {
+         return "redirect:/login.do";
+      }
+      
+      
+   }
+   
+   @RequestMapping("/board/registBoard.do")
+   public String registBoard(HttpSession session, Model model, @RequestParam(name="flag") String flag) {
+      HashMap<String, Object> loginInfo = null;
+      loginInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
+      if(loginInfo != null) {
+         model.addAttribute("flag", flag); // flag : 등록과 수정 구분 값
+         return "board/registBoard";
+      } else {
+         return "redirect:/login.do";
+      }
+      
+   }
+   
+   @RequestMapping("/board/saveBoard.do")
+   public ModelAndView saveBoard(@RequestParam HashMap<String, Object> paramMap, HttpSession session) {
+      ModelAndView mv = new ModelAndView();
+      int resultChk = 0;
 
-		HashMap<String, Object> sessionInfo = (HashMap<String, Object>) session.getAttribute("loginInfo"); //로그인 정보 loginInfo에 담기
-		paramMap.put("memberId", sessionInfo.get("id").toString());
-		
-		resultChk = boardService.saveBoard(paramMap);
-		
-		mv.addObject("resultChk", resultChk);
-		mv.setViewName("jsonView");
-		return mv;
-	}
+      //session 정보 가져오기
+      HashMap<String, Object> sessionInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
+      paramMap.put("memberId", sessionInfo.get("id").toString());
+      
+      resultChk = boardService.saveBoard(paramMap);
+      
+      mv.addObject("resultChk", resultChk);
+      mv.setViewName("jsonView");
+      return mv;
+   }
 
 }
