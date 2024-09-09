@@ -23,14 +23,38 @@
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
+		var flag = "${flag}";
+		if(flag ==="U"){ //flag 값이 U 일때 실행
+			fn_detail("${boardIdx}"); //model 넣었던 값을 가지고 올수있음
+		}
+		
 		$("#btn_save").on('click', function(){
 			fn_save();
 		});
 		
 		$("#btn_list").on('click', function(){
-			
+			location.href ="/board/boardList.do";
 		});
 	});
+	
+	function fn_detail(boardIdx) {
+		
+		$.ajax({
+		    url: '/board/getBoardDetail.do',
+		    method: 'post',
+		    data : {'boardIdx' : boardIdx},  // {'파라미터명칭' : 실제데이터}
+		    dataType : 'json',
+		    success: function (data, status, xhr) {
+		    	$("#boardTitle").val(data.boardInfo.boardTitle);
+		    	$("#boardContent").val(data.boardInfo.boardContent);
+	
+		    },
+		    error: function (data, status, err) {
+		    	console.log(err);
+		    }
+		});
+	}
+	
 	
 	function fn_save(){
 		var frm = $("#saveFrm").serialize();
@@ -53,12 +77,15 @@
 		    }
 		});
 	}
+	
+	
 </script>
 </head>
 <body>
 	<div>
 		<form id="saveFrm" name="saveFrm">
 			<input type="hidden" id="statusFlag" name="statusFlag" value="${flag}"/> <!-- 무슨버튼을 누렸는지(등록 or 수정) -->
+			<input type="hidden" id="boardIdx" name="boardIdx" value="${boardIdx }"/>
 			<table>
 				<tr>
 					<th>제목</th>
@@ -76,7 +103,7 @@
 		</form>
 	</div>
 	<div style="float:right;">
-		<input type="button" id="btn_save" name="btn_save" value="등록"/>
+		<input type="button" id="btn_save" name="btn_save" value="저장"/>
 		<input type="button" id="btn_list" name="btn_list" value="목록"/>
 	</div>
 

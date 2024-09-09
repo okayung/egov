@@ -50,5 +50,11 @@ public class BoardServiceImpl extends EgovAbstractServiceImpl implements BoardSe
 		return boardDAO.selectBoardDetail(boardIdx);
 	}
 
-	
+	@Override
+	public int deleteBoard(HashMap<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return boardDAO.deleteBoard(paramMap);
+	}
+
+
 }

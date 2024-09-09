@@ -19,12 +19,13 @@
          date_format(update_date,'%Y-%m-%d-%H:%i:%s') as updateDate
       from tb_board, (select @rownum:=0 from dual) R
       where 1=1 
+      and use_yn = 'Y'
       <if test="searchKeyword != '' and searchKeyword !=null and searchKeyword != 'undefined'">
          <if test="searchCondition == 'id'">
-            and create_id like concat('%', #{searchKeyword}, '%')
+            and create_id like concat('%', trim(#{searchKeyword}), '%')
          </if>
          <if test="searchCondition == 'title'">
-            and board_title like concat('%', #{searchKeyword}, '%')
+            and board_title like concat('%', trim(#{searchKeyword}), '%')
          </if>
       </if>
       order by create_date) T
@@ -36,12 +37,13 @@
       select count(board_idx)
       from tb_board
       where 1=1 
+      and use_yn = 'Y'
       <if test="searchKeyword != '' and searchKeyword !=null and searchKeyword != 'undefined'">
          <if test="searchCondition == 'id'">
-           and create_id like concat('%', #{searchKeyword},'%')
+           and create_id like concat('%', trim(#{searchKeyword}),'%')
          </if>
          <if test="searchCondition == 'title'">
-            and board_title like concat('%', #{searchKeyword},'%')
+            and board_title like concat('%', trim(#{searchKeyword}),'%')
          </if>
       </if>
    </select>
@@ -71,7 +73,14 @@
       );
    </insert>
    
-   <update id="updateBoard" parameterType="java.util.HashMap">
+   <update id="updateBoard" parameterType="java.util.HashMap">  
+      
+    update tb_board
+	set board_title = #{boardTitle},
+		board_content = #{boardContent},
+		update_id = #{memberId },
+    	update_date = CURRENT_TIMESTAMP()
+	where board_idx = #{boardIdx}
       
    </update>
 
@@ -89,5 +98,14 @@
       where board_idx = #{boardIdx}
 	
 	</select>
+	
+	<update id="deleteBoard" parameterType="java.util.HashMap">
+		UPDATE tb_board
+		SET use_yn = 'N',
+			update_id = #{memberId },
+			update_date = CURRENT_TIMESTAMP()
+		WHERE board_idx = #{boardIdx}
+	</update>
+	
 
 </mapper>

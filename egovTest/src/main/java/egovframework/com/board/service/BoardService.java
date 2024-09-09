@@ -13,4 +13,6 @@ public interface BoardService {
 	
 	public HashMap<String, Object> selectBoardDetail(int boardIdx);
 
+	public int deleteBoard(HashMap<String,Object> paramMap);
+
 }

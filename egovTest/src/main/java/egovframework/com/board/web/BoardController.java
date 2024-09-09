@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -58,7 +59,7 @@ public class BoardController {
       return mv;
    }
    
-   @RequestMapping("/board/boardDetail.do")
+   @RequestMapping("/board/boardDetail.do") //submit 단순화면전환은 String로 가능
    public String boardDetail(@RequestParam(name="boardIdx") int boardIdx, Model model, HttpSession session) {
       HashMap<String, Object> loginInfo = null;
       loginInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
@@ -67,20 +68,34 @@ public class BoardController {
     	 HashMap<String, Object> boardInfo = boardService.selectBoardDetail(boardIdx);
          model.addAttribute("boardIdx", boardIdx); //수정 삭제를 위해 같이 넘겨주기
     	 model.addAttribute("boardInfo", boardInfo); 
+    	 model.addAttribute("loginInfo", loginInfo);
          return "board/boardDetail";
       }else {
          return "redirect:/login.do";
-      }
-      
-      
+      }   
+   }
+   
+   @RequestMapping("/board/getBoardDetail.do") //ajax
+   public ModelAndView getBoardDetail(@RequestParam(name="boardIdx") int boardIdx) {
+	   ModelAndView mv = new ModelAndView();
+	   
+	   HashMap<String, Object> boardInfo = boardService.selectBoardDetail(boardIdx);
+	   
+	   mv.addObject("boardInfo", boardInfo);
+	   mv.setViewName("jsonView");
+	   return mv;
    }
    
    @RequestMapping("/board/registBoard.do")
-   public String registBoard(HttpSession session, Model model, @RequestParam(name="flag") String flag) {
+   public String registBoard(HttpSession session, Model model, @RequestParam HashMap<String, Object> paramMap) {
       HashMap<String, Object> loginInfo = null;
       loginInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
       if(loginInfo != null) {
+         String flag = paramMap.get("flag").toString();
          model.addAttribute("flag", flag); // flag : 등록과 수정 구분 값
+         if("U".equals(flag)) { //flag 값이 U일때만 boardIdx 값을 사용
+        	 model.addAttribute("boardIdx", paramMap.get("boardIdx").toString());
+         }
          return "board/registBoard";
       } else {
          return "redirect:/login.do";
@@ -104,4 +119,18 @@ public class BoardController {
       return mv;
    }
 
+   	@RequestMapping("/board/deleteBoard.do")
+	public ModelAndView deleteBoard(@RequestParam HashMap<String, Object> paramMap,  HttpSession session) {
+		ModelAndView mv = new ModelAndView();
+		int resultChk = 0;
+		
+		HashMap<String, Object> sessionInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
+		paramMap.put("memberId", sessionInfo.get("id").toString());
+
+		resultChk = boardService.deleteBoard(paramMap);
+		
+		mv.addObject("resultChk", resultChk);
+	   mv.setViewName("jsonView");
+	   return mv;
+}
 }
