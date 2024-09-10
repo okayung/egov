@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -132,5 +131,35 @@ public class BoardController {
 		mv.addObject("resultChk", resultChk);
 	   mv.setViewName("jsonView");
 	   return mv;
-}
-}
+   	}
+   	
+   	@RequestMapping("/board/saveBoardReply.do")
+   	public ModelAndView saveBoardReply(@RequestParam HashMap<String, Object> paramMap, HttpSession session) {
+   		ModelAndView mv = new ModelAndView();
+   		
+		HashMap<String, Object> sessionInfo = (HashMap<String, Object>) session.getAttribute("loginInfo");
+		// sessionInfo -> session에 있는 로그인정보 (loginInfo)를 가져옴
+		paramMap.put("memberId", sessionInfo.get("id").toString());
+		// paramMap -> boardIdx, replyContent의 값이 들어가있음
+		int resultChk = 0;
+		resultChk = boardService.insertReply(paramMap);
+		
+		mv.addObject("resultChk", resultChk);
+		mv.setViewName("jsonView");
+		return mv;
+   	}
+   	
+   	@RequestMapping("/board/getBoardReply.do") //댓글조회
+   	public ModelAndView getBoardReply(@RequestParam HashMap<String, Object> paramMap) {
+   	  	ModelAndView mv = new ModelAndView();
+   	   	
+   	  	List<HashMap<String, Object>> replyList = boardService.selectBoardReply(paramMap);
+   	  	
+   	  	mv.addObject("replyList", replyList);
+   	   	mv.setViewName("jsonView");
+   		return mv;
+   	}
+   		
+   		
+   	}
+ 

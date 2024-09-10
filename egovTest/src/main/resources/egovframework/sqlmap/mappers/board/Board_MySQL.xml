@@ -33,7 +33,7 @@
       limit #{recordCountPerPage} offset #{firstIndex};
    </select>
    
-   <select id="selectBoardListCnt" parameterType="java.util.HashMap" resultType="int">
+   <select id="selectBoardListCnt" parameterType="java.util.HashMap" resultType="int"> <!-- 게시판 목록 카운트 -->
       select count(board_idx)
       from tb_board
       where 1=1 
@@ -48,7 +48,7 @@
       </if>
    </select>
    
-   <insert id="insertBoard" parameterType="java.util.HashMap">
+   <insert id="insertBoard" parameterType="java.util.HashMap"> <!-- 게시판 insert -->
       INSERT INTO tb_board (
 
       board_title,
@@ -73,7 +73,7 @@
       );
    </insert>
    
-   <update id="updateBoard" parameterType="java.util.HashMap">  
+   <update id="updateBoard" parameterType="java.util.HashMap"> <!-- 게시판 목록 수정 -->
       
     update tb_board
 	set board_title = #{boardTitle},
@@ -84,7 +84,7 @@
       
    </update>
 
-	<select id="selectBoardDetail" parameterType="int" resultType="java.util.HashMap">
+	<select id="selectBoardDetail" parameterType="int" resultType="java.util.HashMap"> <!-- 게시판 목록 내용 상세보기 -->
 	select 
 	         board_idx as boardIdx,
 	         board_title as boardTitle,
@@ -99,13 +99,75 @@
 	
 	</select>
 	
-	<update id="deleteBoard" parameterType="java.util.HashMap">
+	<update id="deleteBoard" parameterType="java.util.HashMap"> <!-- 게시판 목록 삭제 -->
 		UPDATE tb_board
 		SET use_yn = 'N',
 			update_id = #{memberId },
 			update_date = CURRENT_TIMESTAMP()
 		WHERE board_idx = #{boardIdx}
 	</update>
+	
+	<insert id="insertReply" parameterType="java.util.HashMap"> <!-- 게시판 댓글 insert -->
+	INSERT INTO tb_reply(
+			board_idx,
+            parent_reply_idx,
+			reply_content,
+			create_id,
+			create_date,
+			update_id,
+			update_date,
+			reply_level,
+			use_yn)
+	VALUES(
+		#{boardIdx },
+		#{parentReplyIdx},
+		#{replyContent },
+		#{memberId },
+		CURRENT_TIMESTAMP(),
+		#{memberId },
+		CURRENT_TIMESTAMP(),
+		1,
+		'Y')
+	</insert>
+	
+	<select id="selectBoardReply" parameterType="java.util.HashMap" resultType="java.util.HashMap" > <!-- 대댓글 쿼리 -->
+	with recursive cte as(
+			SELECT 1 AS reply_level,
+					reply_idx,
+		            reply_content,
+		            create_id,
+		            create_date,
+		            convert(reply_idx, char) as path,
+		            parent_reply_idx
+		    FROM tb_reply
+		    WHERE board_idx = #{boardIdx}
+		    AND parent_reply_idx is null
+		    AND use_yn ='Y'
+		    UNION ALL
+		    SELECT 1+cte.reply_level,
+					r.reply_idx,
+		            r.reply_content,
+		            r.create_id,
+		            r.create_date,
+		            concat(path, '-', r.reply_idx) as path,
+		            r.parent_reply_idx
+		    FROM tb_reply AS r
+		    inner join cte 
+		    on r.parent_reply_idx = cte.reply_idx 
+		    WHERE r.board_idx = #{boardIdx}
+		    AND r.use_yn = 'Y'
+		)
+		select reply_idx AS replyIdx,
+				reply_content AS replyContent,
+		        create_id AS createId,
+		        DATE_FORMAT(create_date, '%Y-%m-%d %H:%i:%s') AS createDate,
+		        reply_level-1 AS replyLevel,
+		        path,
+		        parent_reply_idx AS parentReplyIdx
+		from cte
+		order by convert(substring_index(path, '-', 1), unsigned) desc, path
+	
+	</select>
 	
 
 </mapper>
