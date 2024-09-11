@@ -31,7 +31,7 @@
 		}else{
 			$("#btn_update").show();
 		} */
-		
+		fn_getFileList(); 
 		fn_getReply("${boardInfo.boardIdx}");
 		
 		$("#btn_update").on('click', function(){
@@ -58,13 +58,13 @@
 	function fn_delete(){
 //		var frm = $("#saveFrm").serialize();
 // 		var boardIdx = "${boardIdx}";
-// 		var boardIdx2 = "${boardInfo.boardIdx}";
+// 		var boardIdx2 = "${boardInfo.boardIdx}";		
 		var boardIdx3 = $("#boardIdx").val();
 		$.ajax({
 		    url: '/board/deleteBoard.do',
 		    method: 'post',
 		    data : { "boardIdx" : boardIdx3},
-//		    data : frm,
+//		    data : frm,		    
 		    dataType : 'json',
 		    success: function (data, status, xhr) {
 		    	if(data.resultChk > 0){
@@ -79,13 +79,12 @@
 		    }
 		});
 	}
-	
 // function fn_update() {  -->fn_update 호출내용
 //	  $("#flag").val("U");
-//     var frm = $("#saveFrm");
-//     frm.attr("method", "POST");
-//     frm.attr("action", "/board/registBoard.do"); 
-//     frm.submit();
+//   var frm = $("#saveFrm");
+//   frm.attr("method", "POST");
+//   frm.attr("action", "/board/registBoard.do"); 
+//   frm.submit();
 //	}
 
 
@@ -103,7 +102,7 @@
 	    	console.log(err);
 	    }
 	});
-} */
+} */	
 	
 	function fn_getReply(boardIdx){
 		$.ajax({
@@ -151,8 +150,11 @@
 		});
 	}
 	
-	function fn_replyInsert(replyIdx){
-		
+	function fn_replyInsert(replyIdx){ 
+		var innerHtml = '';
+		innerHtml+='<input type="text" id="replyContent_'+replyIdx+'" name="replyContent_'+replyIdx+'" "placeholder="답글을 입력하세요." value=""/>';
+		innerHtml+='<input type="button" id="replyInsert_'+replyIdx+'" name="replyInsert_'+replyIdx+'" value="등록" onclick="javascript:fn_replyInsertSave(\''+replyIdx+'\');"/>';
+		$("#reply_"+replyIdx).append(innerHtml);
 	}
 	
 	function fn_replyInsertSave(replyIdx){ //답글달기
@@ -183,19 +185,19 @@
 	
 	function fn_comment(){ //댓글등록,달기
 		var boardIdx = $("#boardIdx").val();
-		var replyContent = $("#replyContent").val(); //댓글입력값 
+		var replyContent = $("#replyContent").val();  //댓글입력값 
 		$.ajax({
 		    url: '/board/saveBoardReply.do',
 		    method: 'post',
 		    data : { 
-		    	"boardIdx" : boardIdx, //어떤데이터를 댓글 보고있는가
+		    	"boardIdx" : boardIdx,  //어떤데이터를 댓글 보고있는가
 		    	"replyContent" : replyContent // 댓글의 내용, 입력값
 		    },
 		    dataType : 'json',
 		    success: function (data, status, xhr) {
 		    	if(data.resultChk > 0){
 		    		alert("등록되었습니다.");
-	//	    		fn_getReply(boardIdx); // 게시물 목록보여주기
+		    		fn_getReply(boardIdx);  // 게시물 목록보여주기
 		    	}else{
 		    		alert("등록에 실패하였습니다.");
 		    	}
@@ -217,7 +219,7 @@
 		    success: function (data, status, xhr) {
 		    	if(data.resultChk > 0){
 		    		alert("삭제되었습니다.");
-		    		fn_getReply("${boardIdx}");
+		    		fn_getReply(boardIdx);
 		    	}else{
 		    		alert("삭제에 실패하였습니다.");
 		    	}
@@ -229,8 +231,39 @@
 		
 	}
 	
+	function fn_getFileList(){
+		// /board/getFileList.do
+			var fileGroupIdx = "${boardInfo.fileGroupIdx}";
+		$.ajax({
+		    url: '/board/getFileList.do',
+		    method: 'post',
+		    data : { 
+		    	"fileGroupIdx" : fileGroupIdx
+		    },
+		    dataType : 'json',
+		    success: function (data, status, xhr) {
+		    	var innerHtml = '';
+		    	for(var i=0; i<data.fileList.length; i++){
+		    		innerHtml += '<span>';
+		    		innerHtml += '<a href="javascript:fn_down(\''+data.fileList[i].saveFilePath+'\',\''+data.fileList[i].saveFileName+'\');">';
+			    	innerHtml += data.fileList[i].fileOriginalName;
+			    	innerHtml += '</a></span><br>';	
+		    	}
+		    	$("#boardFileList").html(innerHtml);
+		    },
+		    error: function (data, status, err) {
+		    	console.log(status);
+		    }
+		});
+	}
 	
-	
+	function fn_down(filePath, fileName){
+		$("#fileName").val(fileName);
+		$("#filePath").val(filePath)
+		var frm = $("#fileFrm");
+		frm.attr("action", "/board/getFileDown.do");
+		frm.submit();
+	}
 
 </script>
 </head>
@@ -302,7 +335,7 @@
 	<div style="width:100%; margin:0px 0px 0px 9%;">
 		<h4>댓글</h4>
 		<input type="text" id="replyContent" name="replyContent" style="width:87%; margin:0 0px 10px 0px;" placeholder="댓글을 입력해주세요."/>
-		<input type="button" id="btn_reply_save" name="btn_reply_save" value="등록"/> 
+		<input type="button" id="btn_reply_save" name="btn_reply_save" value="등록"/>
 	</div>
 	<div style="width:100%; margin:0px 0px 0px 9%;" id="replyDiv" name="replyDiv">
 	</div>
